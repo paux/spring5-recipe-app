@@ -14,11 +14,13 @@ import org.springframework.ui.Model;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -61,5 +63,16 @@ public class RecipeControllerTest {
         verify(model, times(1)).addAttribute(eq("recipes"), argumentCaptor.capture());
         Set<Recipe> returnedRecipes = argumentCaptor.getValue();
         assertEquals(2, returnedRecipes.size());
+    }
+
+    @Test
+    public void getRecipe() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
+        when(recipeService.findById(anyLong())).thenReturn(Recipe.builder().id(1L).build());
+
+        mockMvc.perform(get("/recipes/details/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipes/details"))
+                .andExpect(model().attributeExists("recipe"));
     }
 }

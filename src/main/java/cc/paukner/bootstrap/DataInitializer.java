@@ -68,6 +68,7 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         guacamole.setDifficulty(Difficulty.EASY);
         guacamole.setCategories(Set.of(mexican, american));
         guacamole.setIngredients(Set.of(avocados, salt));
+        guacamole.setPrepTime(30);
         guacamole.setDirections("Cut, do and cook. Serve with wine.");
         guacamole.setNotes(new Notes("Nota bene"));
 
@@ -80,6 +81,7 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         grilledChickenTacos.setDifficulty(Difficulty.MODERATE);
         grilledChickenTacos.setCategories(Set.of(mexican));
         grilledChickenTacos.setIngredients(Set.of(chiliPowder, driedOregano));
+        grilledChickenTacos.setPrepTime(45);
         grilledChickenTacos.setDirections("Cut, heat up, cook, grill. Serve with beer.");
         grilledChickenTacos.setNotes(new Notes("My grilled notes"));
 

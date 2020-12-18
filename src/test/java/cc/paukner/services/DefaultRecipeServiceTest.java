@@ -7,9 +7,13 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,5 +40,16 @@ public class DefaultRecipeServiceTest {
         Set<Recipe> recipes = recipeService.getAllRecipes();
         assertEquals(1, recipes.size());
         verify(recipeRepository, times(1)).findAll();
+    }
+
+    @Test
+    public void getRecipeByIdTest() throws Exception {
+        when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(Recipe.builder().id(1L).build()));
+
+        Recipe recipeReturned = recipeService.findById(1L);
+
+        assertNotNull("Null recipe returned", recipeReturned);
+        verify(recipeRepository).findById(anyLong());
+        verify(recipeRepository, never()).findAll();
     }
 }
