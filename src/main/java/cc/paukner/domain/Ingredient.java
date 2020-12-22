@@ -1,5 +1,7 @@
 package cc.paukner.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -16,7 +18,9 @@ import java.math.BigDecimal;
 @Data
 @EqualsAndHashCode(exclude = {"recipe"}) // override @Data, to break circular reference
 @NoArgsConstructor // needed for Spring
+@AllArgsConstructor
 @Entity
+@Builder
 public class Ingredient {
 
     @Id

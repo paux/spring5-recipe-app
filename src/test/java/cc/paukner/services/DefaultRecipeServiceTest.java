@@ -1,5 +1,7 @@
 package cc.paukner.services;
 
+import cc.paukner.converters.RecipeDtoToRecipe;
+import cc.paukner.converters.RecipeToRecipeDto;
 import cc.paukner.domain.Recipe;
 import cc.paukner.repositories.RecipeRepository;
 import org.junit.Before;
@@ -25,11 +27,15 @@ public class DefaultRecipeServiceTest {
     @Mock // creates a minimal hull _pretending_ to be a full repo
             // in reality, you have to tell it what to do or return on certain requests
     RecipeRepository recipeRepository;
+    @Mock
+    RecipeDtoToRecipe recipeDtoToRecipe;
+    @Mock
+    RecipeToRecipeDto recipeToRecipeDto;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        recipeService = new DefaultRecipeService(recipeRepository); // dep injection
+        recipeService = new DefaultRecipeService(recipeRepository, recipeDtoToRecipe, recipeToRecipeDto); // dep injection
     }
 
     @Test

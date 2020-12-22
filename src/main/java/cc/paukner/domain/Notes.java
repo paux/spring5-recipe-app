@@ -1,5 +1,7 @@
 package cc.paukner.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -14,7 +16,9 @@ import javax.persistence.OneToOne;
 @Data
 @EqualsAndHashCode(exclude = {"recipe"}) // to break circular reference
 @NoArgsConstructor // needed by Spring
+@AllArgsConstructor
 @Entity
+@Builder
 public class Notes {
 
     @Id
