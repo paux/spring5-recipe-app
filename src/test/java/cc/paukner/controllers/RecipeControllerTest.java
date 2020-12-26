@@ -1,12 +1,14 @@
 package cc.paukner.controllers;
 
 import cc.paukner.domain.Recipe;
+import cc.paukner.dtos.RecipeDto;
 import cc.paukner.services.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
@@ -14,12 +16,14 @@ import org.springframework.ui.Model;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -34,17 +38,19 @@ public class RecipeControllerTest {
     @Mock
     Model model;
 
+    MockMvc mockMvc;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         recipeController = new RecipeController(recipeService);
+        // good for Spring MVC controllers
+        // With webAppContextSetup that'd no longer be a unit test
+        mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
     }
 
     @Test
     public void testMockMvc() throws Exception {
-        // good for Spring MVC controllers
-        // With webAppContextSetup that'd no longer be a unit test
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
         mockMvc.perform(get("/recipes"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipes/index"));
@@ -70,9 +76,39 @@ public class RecipeControllerTest {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
         when(recipeService.findById(anyLong())).thenReturn(Recipe.builder().id(1L).build());
 
-        mockMvc.perform(get("/recipes/details/1"))
+        mockMvc.perform(get("/recipes/1/details"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipes/details"))
+                .andExpect(model().attributeExists("recipe"));
+    }
+
+    @Test
+    public void getNewRecipe() throws Exception {
+        mockMvc.perform(get("/recipes/new"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipes/edit"))
+                .andExpect(model().attributeExists("recipe"));
+    }
+
+    @Test
+    public void postNewRecipeForm() throws Exception {
+        when(recipeService.saveRecipeDto(any())).thenReturn(RecipeDto.builder().id(2L).build());
+
+        mockMvc.perform(post("/recipes/save")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "")
+                .param("description", "some values")
+        ).andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/recipes/2/details"));
+    }
+
+    @Test
+    public void getUpdateView() throws Exception {
+        when(recipeService.findDtoById(anyLong())).thenReturn(RecipeDto.builder().id(2L).build());
+
+        mockMvc.perform(get("/recipes/1/edit"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipes/edit"))
                 .andExpect(model().attributeExists("recipe"));
     }
 }

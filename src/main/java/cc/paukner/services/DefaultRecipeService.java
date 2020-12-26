@@ -45,6 +45,13 @@ public class DefaultRecipeService implements RecipeService {
         return recipeOptional.get();
     }
 
+
+    @Override
+    @Transactional // to avoid bumping against lazily loaded properties
+    public RecipeDto findDtoById(Long id) {
+        return recipeToRecipeDto.convert(findById(id));
+    }
+
     @Override
     @Transactional
     public RecipeDto saveRecipeDto(RecipeDto recipeDto) {

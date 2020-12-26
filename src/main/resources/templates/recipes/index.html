@@ -32,6 +32,7 @@
                                 <th>ID</th>
                                 <th>Description</th>
                                 <th></th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -39,12 +40,16 @@
                                 <td>123</td>
                                 <td>Testing</td>
                                 <td></td>
+                                <td></td>
                             </tr>
                             <tr th:each="recipe: ${recipes}">
                                 <td th:text="${recipe.id}"></td>
                                 <td th:text="${recipe.description}"></td>
                                 <td>
-                                    <a href="#" th:href="@{'/recipes/details/' + ${recipe.id}}">Details</a>
+                                    <a href="#" th:href="@{'/recipes/' + ${recipe.id} + '/details'}">Details</a>
+                                </td>
+                                <td>
+                                    <a href="#" th:href="@{'/recipes/' + ${recipe.id} + '/edit'}">Edit</a>
                                 </td>
                             </tr>
                             </tbody>
