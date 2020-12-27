@@ -7,6 +7,7 @@ import cc.paukner.repositories.UnitOfMeasureRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Optional;
@@ -23,6 +24,7 @@ public class IndexController {
         this.unitOfMeasureRepository = unitOfMeasureRepository;
     }
 
+    @GetMapping
     @RequestMapping({"", "/"})
     public String getIndexPage(Model model) {
         Optional<Category> category = categoryRepository.findByDescription("American");
