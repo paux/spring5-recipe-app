@@ -62,4 +62,9 @@ public class DefaultRecipeService implements RecipeService {
         log.debug("Saved recipe id: " + savedRecipe.getId());
         return recipeToRecipeDto.convert(savedRecipe);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        recipeRepository.deleteById(id);
+    }
 }

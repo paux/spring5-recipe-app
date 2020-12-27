@@ -83,7 +83,7 @@ public class SomeTest {
 
 ## Convention over Configuration (CoC)
 
-All external dependencies are readily available with their own and _curated_ dependencies,
+In a Spring application, all external dependencies are readily available with their own and _curated_ dependencies,
 and they're ready to use with a default and _curated_ configuration.
 You can override these defaults, but you have to do so explicitly.
 
@@ -120,6 +120,8 @@ The `@Controller` annotation works like `@Component`, but it makes the intent cl
 that this is a web controller.
 Typically, expect a `@RequestMapping` on the class (to declare a common sub-path)
 or on its methods (to declare a specific HTTP endpoint).
+Methods don't need a `@GetMapping` or `@PostMapping` explicitly, but then they'd support _all_ request types,
+so this should be avoided.
 
 ```java
 import org.springframework.stereotype.Controller;
@@ -130,13 +132,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class RecipeController {
 
    @RequestMapping({"", "/", "/index"})
-   public Set<Recipe> listAllRecipes() {
+   public String listAllRecipes() {
       // ...
    }
 }
 ```
 
 Web controllers should do just that: handle web requests. They should _not_ contain business logic.
+After all, their methods just return a view name; the `Model` argument is probably getting enriched with data.
 
 `@PathVariable` annotates the controller method argument that matches the pattern given in
 `@RequestMapping`:
@@ -232,9 +235,9 @@ component → interface ← implementation
 
 ## Repositories
 
-## Profiles
+## Spring Profiles
 
-## Tests
+## Testing
 
 ### Unit Tests
 

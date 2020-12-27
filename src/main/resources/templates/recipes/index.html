@@ -33,12 +33,14 @@
                                 <th>Description</th>
                                 <th></th>
                                 <th></th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:remove="all">
                                 <td>123</td>
                                 <td>Testing</td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                             </tr>
@@ -50,6 +52,9 @@
                                 </td>
                                 <td>
                                     <a href="#" th:href="@{'/recipes/' + ${recipe.id} + '/edit'}">Edit</a>
+                                </td>
+                                <td>
+                                    <a href="#" th:href="@{'/recipes/' + ${recipe.id} + '/delete'}">Delete</a>
                                 </td>
                             </tr>
                             </tbody>

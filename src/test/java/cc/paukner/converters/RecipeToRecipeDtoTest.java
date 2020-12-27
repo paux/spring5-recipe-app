@@ -91,7 +91,7 @@ public class RecipeToRecipeDtoTest {
         assertEquals(URL, recipeDto.getUrl());
         assertEquals(2, recipeDto.getCategories().size());
         // Not shown in video, but I did it anyway :)
-        assertThat(recipeDto.getCategories()).extracting(CategoryDto::getId).containsExactly(CAT_ID_1, CAT_ID_2);
+        assertThat(recipeDto.getCategories()).extracting(CategoryDto::getId).containsExactlyInAnyOrder(CAT_ID_1, CAT_ID_2);
         assertEquals(2, recipeDto.getIngredients().size());
         assertThat(recipeDto.getIngredients()).extracting(IngredientDto::getId).containsExactlyInAnyOrder(INGRED_ID_1, INGRED_ID_2);
     }

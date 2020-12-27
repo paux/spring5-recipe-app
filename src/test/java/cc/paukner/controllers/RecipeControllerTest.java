@@ -111,4 +111,13 @@ public class RecipeControllerTest {
                 .andExpect(view().name("recipes/edit"))
                 .andExpect(model().attributeExists("recipe"));
     }
+
+    @Test
+    public void deleteAction() throws Exception {
+        mockMvc.perform(get("/recipes/1/delete")) // REST has got DELETE, but HTML forms cannot do that
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/recipes"));
+
+        verify(recipeService).deleteById(anyLong());
+    }
 }

@@ -49,7 +49,7 @@ public class DefaultRecipeServiceTest {
     }
 
     @Test
-    public void getRecipeByIdTest() throws Exception {
+    public void getRecipeById() throws Exception {
         when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(Recipe.builder().id(1L).build()));
 
         Recipe recipeReturned = recipeService.findById(1L);
@@ -57,5 +57,13 @@ public class DefaultRecipeServiceTest {
         assertNotNull("Null recipe returned", recipeReturned);
         verify(recipeRepository).findById(anyLong());
         verify(recipeRepository, never()).findAll();
+    }
+
+    @Test
+    public void deleteById() throws Exception {
+        // nothing to mock, as return type is void:
+        recipeService.deleteById(1L);
+
+        verify(recipeRepository).deleteById(anyLong());
     }
 }
