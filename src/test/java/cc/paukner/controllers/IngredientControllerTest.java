@@ -1,6 +1,8 @@
 package cc.paukner.controllers;
 
+import cc.paukner.dtos.IngredientDto;
 import cc.paukner.dtos.RecipeDto;
+import cc.paukner.services.IngredientService;
 import cc.paukner.services.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,12 +26,15 @@ public class IngredientControllerTest {
     @Mock
     RecipeService recipeService;
 
+    @Mock
+    IngredientService ingredientService;
+
     MockMvc mockMvc;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        ingredientController = new IngredientController(recipeService);
+        ingredientController = new IngredientController(recipeService, ingredientService);
         mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
     }
 
@@ -43,5 +48,15 @@ public class IngredientControllerTest {
                 .andExpect(model().attributeExists("recipe"));
 
         verify(recipeService).findDtoById(anyLong());
+    }
+
+    @Test
+    public void showIngredient() throws Exception {
+        when(ingredientService.findByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(new IngredientDto());
+
+        mockMvc.perform(get("/recipes/1/ingredients/2/details"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipes/ingredients/details"))
+                .andExpect(model().attributeExists("ingredient"));
     }
 }

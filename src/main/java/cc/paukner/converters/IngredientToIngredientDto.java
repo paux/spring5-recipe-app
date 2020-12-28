@@ -26,6 +26,7 @@ public class IngredientToIngredientDto implements Converter<Ingredient, Ingredie
 
         return IngredientDto.builder()
                 .id(ingredient.getId())
+                .recipeId(ingredient.getRecipe() != null ? ingredient.getRecipe().getId() : null)
                 .description(ingredient.getDescription())
                 .amount(ingredient.getAmount())
                 .unitOfMeasure(unitOfMeasureToUnitOfMeasureDto.convert(ingredient.getUnitOfMeasure()))
