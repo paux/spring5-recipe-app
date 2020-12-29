@@ -7,6 +7,7 @@ import cc.paukner.converters.UnitOfMeasureToUnitOfMeasureDto;
 import cc.paukner.domain.Ingredient;
 import cc.paukner.domain.Recipe;
 import cc.paukner.dtos.IngredientDto;
+import cc.paukner.repositories.IngredientRepository;
 import cc.paukner.repositories.RecipeRepository;
 import cc.paukner.repositories.UnitOfMeasureRepository;
 import org.junit.Before;
@@ -34,6 +35,9 @@ public class DefaultIngredientServiceTest {
     @Mock
     UnitOfMeasureRepository unitOfMeasureRepository;
 
+    @Mock
+    IngredientRepository ingredientRepository;
+
     private final IngredientToIngredientDto ingredientToIngredientDto;
     private final IngredientDtoToIngredient ingredientDtoToIngredient;
 
@@ -47,6 +51,7 @@ public class DefaultIngredientServiceTest {
         MockitoAnnotations.initMocks(this);
         ingredientService = new DefaultIngredientService(recipeRepository,
                 unitOfMeasureRepository,
+                ingredientRepository,
                 ingredientToIngredientDto,
                 ingredientDtoToIngredient);
     }
@@ -86,5 +91,13 @@ public class DefaultIngredientServiceTest {
         assertEquals(Long.valueOf(3L), savedIngredientDto.getId());
         verify(recipeRepository).findById(anyLong());
         verify(recipeRepository).save(any(Recipe.class));
+    }
+
+    @Test
+    public void deleteIngredientById() throws Exception {
+        // this test is so pointless
+        ingredientService.deleteIngredientById(1L);
+
+        verify(ingredientRepository).deleteById(anyLong());
     }
 }

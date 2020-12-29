@@ -1,6 +1,7 @@
 package cc.paukner.controllers;
 
 import cc.paukner.dtos.IngredientDto;
+import cc.paukner.dtos.UnitOfMeasureDto;
 import cc.paukner.services.IngredientService;
 import cc.paukner.services.RecipeService;
 import cc.paukner.services.UnitOfMeasureService;
@@ -47,12 +48,22 @@ public class IngredientController {
     }
 
     @GetMapping
+    @RequestMapping("/new")
+    public String newIngredient(@PathVariable String recipeId, Model model) {
+        // TODO: fail if recipe does not exist
+        recipeService.findDtoById(Long.valueOf(recipeId));
+        model.addAttribute("ingredient", IngredientDto.builder().recipeId(Long.valueOf(recipeId)).unitOfMeasure(new UnitOfMeasureDto()).build());
+        model.addAttribute("allUnitsOfMeasure", unitOfMeasureService.listAll());
+        return "recipes/ingredients/edit";
+    }
+
+    @GetMapping
     @RequestMapping("/{id}/edit")
     public String editIngredient(@PathVariable String recipeId,
                                  @PathVariable String id,
                                  Model model) {
         model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(Long.valueOf(recipeId), Long.valueOf(id)));
-        model.addAttribute("allUnitOfMeasures", unitOfMeasureService.listAll());
+        model.addAttribute("allUnitsOfMeasure", unitOfMeasureService.listAll());
         return "recipes/ingredients/edit";
     }
 
@@ -62,5 +73,13 @@ public class IngredientController {
         IngredientDto savedIngredientDto = ingredientService.saveIngredientDto(ingredientDto);
         log.debug("Saved ingredient id " + savedIngredientDto.getId() + " to recipe id " + savedIngredientDto.getRecipeId());
         return "redirect:/recipes/" + savedIngredientDto.getRecipeId() + "/ingredients/" + savedIngredientDto.getId() + "/details";
+    }
+
+    @GetMapping
+    @RequestMapping("/{id}/delete")
+    public String deleteIngredient(@PathVariable String recipeId, @PathVariable String id) {
+        log.debug("Deleting ingredient id " + id);
+        ingredientService.deleteIngredientById(Long.valueOf(id));
+        return "redirect:/recipes/" + recipeId + "/ingredients";
     }
 }

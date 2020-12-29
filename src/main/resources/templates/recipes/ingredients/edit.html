@@ -45,7 +45,7 @@
                                 <div class="col-md-4 form-group">
                                     <label>Unit of measure</label>
                                     <select name="unitOfMeasure.id" class="form-control">
-                                        <option th:each="unitOfMeasure : ${allUnitOfMeasures}"
+                                        <option th:each="unitOfMeasure : ${allUnitsOfMeasure}"
                                                 th:value="${unitOfMeasure.id}"
                                                 th:selected="${unitOfMeasure.id.equals(ingredient.unitOfMeasure.id)}"
                                                 th:text="${unitOfMeasure.description}">Each</option>

@@ -70,6 +70,20 @@ public class IngredientControllerTest {
     }
 
     @Test
+    public void newIngredient() throws Exception {
+        when(recipeService.findDtoById(anyLong())).thenReturn(RecipeDto.builder().id(1L).build());
+        when(unitOfMeasureService.listAll()).thenReturn(new HashSet<>());
+
+        mockMvc.perform(get("/recipes/1/ingredients/new"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipes/ingredients/edit"))
+                .andExpect(model().attributeExists("ingredient"))
+                .andExpect(model().attributeExists("allUnitsOfMeasure"));
+
+        verify(recipeService).findDtoById(anyLong());
+    }
+
+    @Test
     public void editIngredient() throws Exception {
         when(ingredientService.findByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(new IngredientDto());
         when(unitOfMeasureService.listAll()).thenReturn(new HashSet<>());
@@ -78,7 +92,7 @@ public class IngredientControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipes/ingredients/edit"))
                 .andExpect(model().attributeExists("ingredient"))
-                .andExpect(model().attributeExists("allUnitOfMeasures"));
+                .andExpect(model().attributeExists("allUnitsOfMeasure"));
     }
 
     @Test
@@ -91,5 +105,15 @@ public class IngredientControllerTest {
                 .param("description", "dummy"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipes/2/ingredients/3/details"));
+    }
+
+    @Test
+    public void deleteIngredient() throws Exception {
+        // nothing to mock, because return type is void ...
+        mockMvc.perform(get("/recipes/2/ingredients/1/delete"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/recipes/2/ingredients"));
+        // ... but verify service was called
+        verify(ingredientService).deleteIngredientById(anyLong());
     }
 }

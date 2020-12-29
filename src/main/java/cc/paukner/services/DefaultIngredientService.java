@@ -5,15 +5,14 @@ import cc.paukner.converters.IngredientToIngredientDto;
 import cc.paukner.domain.Ingredient;
 import cc.paukner.domain.Recipe;
 import cc.paukner.dtos.IngredientDto;
+import cc.paukner.repositories.IngredientRepository;
 import cc.paukner.repositories.RecipeRepository;
 import cc.paukner.repositories.UnitOfMeasureRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -21,14 +20,18 @@ public class DefaultIngredientService implements IngredientService {
 
     private final RecipeRepository recipeRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
+    private final IngredientRepository ingredientRepository;
     private final IngredientToIngredientDto ingredientToIngredientDto;
     private final IngredientDtoToIngredient ingredientDtoToIngredient;
 
     public DefaultIngredientService(RecipeRepository recipeRepository,
                                     UnitOfMeasureRepository unitOfMeasureRepository,
-                                    IngredientToIngredientDto ingredientToIngredientDto, IngredientDtoToIngredient ingredientDtoToIngredient) {
+                                    IngredientRepository ingredientRepository,
+                                    IngredientToIngredientDto ingredientToIngredientDto,
+                                    IngredientDtoToIngredient ingredientDtoToIngredient) {
         this.recipeRepository = recipeRepository;
         this.unitOfMeasureRepository = unitOfMeasureRepository;
+        this.ingredientRepository = ingredientRepository;
         this.ingredientToIngredientDto = ingredientToIngredientDto;
         this.ingredientDtoToIngredient = ingredientDtoToIngredient;
     }
@@ -81,15 +84,33 @@ public class DefaultIngredientService implements IngredientService {
             );
         } else {
             // new ingredient
-            recipe.setIngredients(Set.of(Objects.requireNonNull(ingredientDtoToIngredient.convert(ingredientDto))));
+            Ingredient newIngredient = ingredientDtoToIngredient.convert(ingredientDto);
+            assert newIngredient != null;
+            newIngredient.setRecipe(recipe);
+            recipe.getIngredients().add(newIngredient);
         }
 
         Recipe savedRecipe = recipeRepository.save(recipe);
 
-        // TODO: check for fail
-        return ingredientToIngredientDto.convert(savedRecipe.getIngredients().stream()
+        Optional<Ingredient> savedIngredientOptional = savedRecipe.getIngredients().stream()
                 .filter(ingredient -> ingredient.getId().equals(ingredientDto.getId()))
-                .findFirst()
-                .get());
+                .findFirst();
+        // check by description
+        if (savedIngredientOptional.isEmpty()) {
+            // not totally safe, but best guess
+            savedIngredientOptional = savedRecipe.getIngredients().stream()
+                    .filter(ingredient -> ingredient.getDescription().equals(ingredientDto.getDescription()))
+                    .filter(ingredient -> ingredient.getAmount().equals(ingredientDto.getAmount()))
+                    .filter(ingredient -> ingredient.getUnitOfMeasure().getId().equals(ingredientDto.getUnitOfMeasure().getId()))
+                    .findFirst();
+        }
+        // TODO: check for fail
+        return ingredientToIngredientDto.convert(savedIngredientOptional.get());
+    }
+
+    @Override
+    public void deleteIngredientById(Long id) {
+        // We don't care about what recipe it belongs to
+        ingredientRepository.deleteById(id);
     }
 }
