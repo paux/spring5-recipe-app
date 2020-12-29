@@ -22,7 +22,6 @@
         <div class="col-md-6 offset-md-3">
             <form th:object="${recipe}" th:action="@{/recipes/save}">
                 <input type="hidden" th:field="*{id}">
-<!--                <div class="card-group">-->
                 <div class="row">
 
                     <div class="card card-primary">
@@ -157,9 +156,7 @@
                         </div>
                     </div>
 
-                </div>
-                <div class="row">
-                    <input type="submit" value="Submit">
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </form>
         </div>
