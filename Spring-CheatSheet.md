@@ -170,8 +170,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class SomeController {
 
-   @PostMapping
-   @RequestMapping("/save")
+   @PostMapping("/save")
    public String saveSomething(@ModelAttribute SomeDto someDto) {
       // ...
    }
@@ -235,10 +234,52 @@ component → interface ← implementation
 
 ## Repositories
 
+Repositories are interfaces.
+If you give these methods descriptive names, you don't need to code an implementation yourself,
+Spring can interpret it for you.
+Examples: `findById(Long id)`, `deleteByIdAndName(Long id, String name)`,
+where the arguments must be attributes of the given entity.
+
+```java
+public interface SomeEntityRepository extends CrudRepository<SomeEntity, Long> {
+
+   Optional<SomeEntity> findByDescription(String description);
+}
+```
+
+Usage examples:
+
+```java
+   someEntityRepository.deleteById(1L);                     // by CrudRepository
+   someEntityRepository.findByDescription("a description"); // by SomeEntityRepository
+```
+
 ## Spring Profiles
+
+There could be multiple implementations of a single interface, say, of a service.
+All these `@Service`s are Spring components.
+How should Spring then decide which implementation to choose?
+Use `@Profile("some-profile")` to have an implementation only active when a certain
+Spring profile is active. To choose a default, annotate with `@Primary`.
+
+Activate profiles e.g. via `resources/application.properties`:
+
+```
+spring.profiles.active=some-profile
+```
 
 ## Testing
 
 ### Unit Tests
 
+Single part (method) of a single component. Usually without a full Spring context.
+
 ### Integration Tests
+
+Ties together several components. Usually within a full Spring context.
+
+## Spring MVC
+
+### Thymeleaf templating engine
+
+What does `th:field="*{property}"` do?

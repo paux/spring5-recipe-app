@@ -20,7 +20,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6 offset-md-3">
-            <form th:object="${recipe}" th:action="@{/recipes/save}">
+            <form method="post" th:object="${recipe}" th:action="@{/recipes/save}">
                 <input type="hidden" th:field="*{id}">
                 <div class="row">
 
@@ -68,10 +68,10 @@
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <label>Difficulty</label>
-                                    <select class="form-control">
-                                        <option>Easy</option>
-                                        <option>Medium</option>
-                                        <option>Hard</option>
+                                    <select class="form-control" th:field="*{difficulty}">
+                                        <option th:each="difficultyVal : ${T(cc.paukner.domain.Difficulty).values()}
+"                                               th:value="${difficultyVal.name()}"
+                                                th:text="${difficultyVal.name()}">Diffy</option>
                                     </select>
                                 </div>
                             </div>
