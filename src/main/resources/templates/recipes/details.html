@@ -23,7 +23,16 @@
 
             <div class="card bg-primary mb-3 mt-3">
                 <div class="card-header">
-                    <h1 class="card-title" th:text="${recipe.description}">Recipe Details</h1>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <h1 class="card-title" th:text="${recipe.description}">Recipe Details</h1>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="image">
+                                <button class="btn btn-primary">Change image</button>
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
 
@@ -31,10 +40,17 @@
                         <div class="col-md-3">
                             <h5>Categories</h5>
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-md-3">
                             <ul>
+                                <li th:remove="all">Cat one</li>
+                                <li th:remove="all">Cat two</li>
                                 <li th:each="cat : ${recipe.categories}" th:text="${cat.description}"></li>
                             </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <img src="../../static/images/broken.jpg"
+                                 th:src="@{/images/guacamole-400x400.jpg}"
+                                 width="200" height="200">
                         </div>
                     </div>
 
@@ -43,7 +59,7 @@
                             <h5>Prep time</h5>
                         </div>
                         <div class="col-md-3">
-                            <p th:text="${recipe.prepTime} + ' min'"></p>
+                            <p th:text="${recipe.prepTime} + ' min'">99 min</p>
                         </div>
 
                         <div class="col-md-3">

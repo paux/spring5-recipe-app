@@ -249,7 +249,7 @@ public interface SomeEntityRepository extends CrudRepository<SomeEntity, Long> {
 
 Usage examples:
 
-```java
+```
    someEntityRepository.deleteById(1L);                     // by CrudRepository
    someEntityRepository.findByDescription("a description"); // by SomeEntityRepository
 ```
