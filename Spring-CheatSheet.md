@@ -1,6 +1,6 @@
 # Spring Framework Cheat-Sheet
 
-by Stephan Paukner &lt;paux+dev@paukner.cc&gt;, Dec 2020. Work in progress.
+by Stephan Paukner &lt;paux+dev@paukner.cc&gt;, Dec 2020&ndash;Jan 2021. Work in progress.
 
 Disclaimer: Expect errors
 
@@ -282,4 +282,4 @@ Ties together several components. Usually within a full Spring context.
 
 ### Thymeleaf templating engine
 
-What does `th:field="*{property}"` do?
+_What does `th:field="*{property}"` do?_

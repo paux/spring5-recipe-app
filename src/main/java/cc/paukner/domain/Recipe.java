@@ -49,6 +49,7 @@ public class Recipe {
     private Set<Ingredient> ingredients;
 
     @Lob
+    // recommended by the Hibernate team to not use primitive type byte[], because these can't be null
     private Byte[] image;
 
     @OneToOne(cascade = CascadeType.ALL) // Recipe is the owner due to cascade
