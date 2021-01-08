@@ -4,6 +4,7 @@ import cc.paukner.converters.RecipeDtoToRecipe;
 import cc.paukner.converters.RecipeToRecipeDto;
 import cc.paukner.domain.Recipe;
 import cc.paukner.dtos.RecipeDto;
+import cc.paukner.exceptions.NotFoundException;
 import cc.paukner.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class DefaultRecipeService implements RecipeService {
     public Recipe findById(Long id) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(id);
         if (!recipeOptional.isPresent()) {
-            throw new RuntimeException("Recipe not found");
+            throw new NotFoundException("Recipe not found");
         }
         return recipeOptional.get();
     }

@@ -2,6 +2,7 @@ package cc.paukner.controllers;
 
 import cc.paukner.domain.Recipe;
 import cc.paukner.dtos.RecipeDto;
+import cc.paukner.exceptions.NotFoundException;
 import cc.paukner.services.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -80,6 +81,14 @@ public class RecipeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipes/details"))
                 .andExpect(model().attributeExists("recipe"));
+    }
+
+    @Test
+    public void getRecipeNotFound() throws Exception {
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/recipes/1/details"))
+                .andExpect(status().isNotFound());
     }
 
     @Test

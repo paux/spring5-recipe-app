@@ -3,6 +3,7 @@ package cc.paukner.services;
 import cc.paukner.converters.RecipeDtoToRecipe;
 import cc.paukner.converters.RecipeToRecipeDto;
 import cc.paukner.domain.Recipe;
+import cc.paukner.exceptions.NotFoundException;
 import cc.paukner.repositories.RecipeRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,6 +47,13 @@ public class DefaultRecipeServiceTest {
         Set<Recipe> recipes = recipeService.getAllRecipes();
         assertEquals(1, recipes.size());
         verify(recipeRepository, times(1)).findAll();
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getRecipeByIdNotFound() throws Exception {
+        when(recipeRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        recipeService.findById(1L);
     }
 
     @Test
