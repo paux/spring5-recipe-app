@@ -47,7 +47,9 @@ public class RecipeControllerTest {
         recipeController = new RecipeController(recipeService);
         // good for Spring MVC controllers
         // With webAppContextSetup that'd no longer be a unit test
-        mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(recipeController)
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .build();
     }
 
     @Test

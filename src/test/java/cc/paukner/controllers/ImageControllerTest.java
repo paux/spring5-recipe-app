@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class ImageControllerTest {
 
@@ -39,7 +40,9 @@ public class ImageControllerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         imageController = new ImageController(imageService, recipeService); // doesn't it have to get initialized? - Yes, as mock
-        mockMvc = MockMvcBuilders.standaloneSetup(imageController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(imageController)
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .build();
     }
 
     @Test
@@ -80,5 +83,12 @@ public class ImageControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         assertEquals(fakeImage.getBytes().length, response.getContentAsByteArray().length);
+    }
+
+    @Test
+    public void getImageForm_IdInvalidNumber() throws Exception {
+        mockMvc.perform(get("/recipes/invalid/image"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("400"));
     }
 }
