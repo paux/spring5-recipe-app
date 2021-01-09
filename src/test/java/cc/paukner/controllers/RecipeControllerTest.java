@@ -93,6 +93,13 @@ public class RecipeControllerTest {
     }
 
     @Test
+    public void getRecipe_IdInvalidNumber() throws Exception {
+        mockMvc.perform(get("/recipes/invalid/details"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("400"));
+    }
+
+    @Test
     public void getNewRecipe() throws Exception {
         mockMvc.perform(get("/recipes/new"))
                 .andExpect(status().isOk())

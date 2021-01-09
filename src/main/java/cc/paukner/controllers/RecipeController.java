@@ -68,11 +68,21 @@ public class RecipeController {
     @ResponseStatus(HttpStatus.NOT_FOUND) // why is this needed? because this handler method is simply taking precedence and wouldn't throw
                                           // Note that this is already the _handler_
     @ExceptionHandler(NotFoundException.class) // the annotation on that class is ignored, so we have to repeat it
-    public ModelAndView handleNotFound() {
-        log.error("Handling not found exception");
+    public ModelAndView handleNotFound(Exception exception) {
+        log.error("Handling not found exception. Message: " + exception.getMessage());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("404");
+        modelAndView.addObject("exception", exception);
         return modelAndView;
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NumberFormatException.class)
+    public ModelAndView handleNumberFormat(Exception exception) {
+        log.error("Handling number format exception. Message: " + exception.getMessage());
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("400");
+        modelAndView.addObject("exception", exception);
+        return modelAndView;
+    }
 }
