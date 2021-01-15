@@ -61,6 +61,7 @@ public class RecipeController {
     public String saveRecipe(@Validated @ModelAttribute(RECIPE_ATTRIBUTE) RecipeDto recipeDto, BindingResult bindingResult) { // bind form POST parameters to dto
         if (bindingResult.hasErrors()) {
             bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
+            // binding result is on the model, tied to the `fields` property, available in Thymeleaf
             return RECIPE_EDIT_FORM;
         }
         RecipeDto savedRecipeDto = recipeService.saveRecipeDto(recipeDto);
