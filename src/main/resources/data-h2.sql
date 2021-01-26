@@ -1,4 +1,5 @@
 -- This is executed by Spring JDBC
+-- Only works with Hibernate; we could do a data-mysql.sql, though
 insert into category (description) values ('American');
 insert into category (description) values ('Italian');
 insert into category (description) values ('Mexican');
