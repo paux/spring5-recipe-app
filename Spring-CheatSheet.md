@@ -254,7 +254,7 @@ Usage examples:
    someEntityRepository.findByDescription("a description"); // by SomeEntityRepository
 ```
 
-## Spring Profiles
+## Choosing from Implementations
 
 There could be multiple implementations of a single interface, say, of a service.
 All these `@Service`s are Spring components.
@@ -267,6 +267,26 @@ Activate profiles e.g. via `resources/application.properties`:
 ```
 spring.profiles.active=some-profile
 ```
+
+To choose an implementation without using profiles, you could also directly use the annotation
+`@Qualifier("theSpecificImpl")` where an interface is injected, like:
+
+```java
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class ConstructorInjectedController {
+
+   private SomeService someService;
+
+   public ConstructorInjectedController(@Qualifier("someServiceImpl") SomeService someService) {
+      this.someService = someService;
+   }
+}
+```
+
+You could also use `@Qualifier` at the method level.
 
 ## Testing
 
